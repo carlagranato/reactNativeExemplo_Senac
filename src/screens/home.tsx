@@ -1,6 +1,10 @@
-import React from "react";
-import { Text, View, StyleSheet, FlatList, ListRenderItem, TouchableOpacity,   } from 'react-native';
+import  React, { useCallback, useState } from "react";
+import { Text, View, StyleSheet, FlatList, ListRenderItem, TouchableOpacity } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Item from '../models/item';
+import { StackParams } from "./navigator";
+import axios from 'axios';
+import { useFocusEffect } from "@react-navigation/native";
 
 const itens: Item[] = [
     {
@@ -22,12 +26,26 @@ const itens: Item[] = [
     }
 ]
 
-const HomeScreen : React.FC = () => { /* O {item} na verdade é uma desestruturação de ListrenderItemInfo.Item, que é um objeto de ListRenderItem (que nos permite acessar o item, e as propriedades de cada item)*/
+type Props = NativeStackScreenProps<StackParams, 'Item'>;
+
+const HomeScreen : React.FC<Props> = (props) => { /* O {item} na verdade é uma desestruturação de ListrenderItemInfo.Item, que é um objeto de ListRenderItem (que nos permite acessar o item, e as propriedades de cada item)*/
+
+    const [data, setData] = useState<Item[]>([]);
+
+    useFocusEffect (useCallback(() => {
+        axios.get<Item[]>('http://localhost:4000/api/itens')
+        .then((res) => {
+            setData(res.data)
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }, []));
 
     const renderFlatlistItem: ListRenderItem<Item> = ({item}) => {
         return(
             <View style={styles.listItem}>
-                <Text style={styles.listItemText}>{item.nome}</Text>
+                <Text style={styles.listItemText} onPress={() => {props.navigation.navigate('Item', {item: item} )}}>{item.nome}</Text>
             </View>
         )
     }
@@ -36,7 +54,7 @@ const HomeScreen : React.FC = () => { /* O {item} na verdade é uma desestrutura
         <View>
             <FlatList 
             renderItem={renderFlatlistItem} 
-            data={itens}
+            data={data}
             /> 
 
             <TouchableOpacity>

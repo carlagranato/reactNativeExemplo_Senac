@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, View, Text, Image, Button, StyleSheet } from "react-native";
+import { View, Text, Image, Button, StyleSheet } from "react-native";
 import image from './assets/bolsaurso.jpg';
 
 const ProfileScreen: React.FC = () => {

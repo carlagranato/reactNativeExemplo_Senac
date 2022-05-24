@@ -1,7 +1,12 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Button, TouchableOpacity, Text } from 'react-native';
 
-const LoginScreen: React.FC = () => {
+import { StackParams } from "./navigator";
+
+type Props = NativeStackScreenProps<StackParams, 'Login'>; /* Props espefício de navegação, puxando o tipo e parametros do StackParams */
+
+const LoginScreen: React.FC<Props> = (props) => {
 
     const [Sucesso, setSucesso] = useState(false)
     const [Erro, setErro] = useState(false)
@@ -21,6 +26,10 @@ const LoginScreen: React.FC = () => {
         
         setSucesso(loginCorreto)
         setErro(!loginCorreto)
+
+        if (loginCorreto) {
+            props.navigation.navigate('Home');
+        }
 
       } 
 
@@ -44,7 +53,7 @@ const LoginScreen: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.linkNovoUsuario} onPress= {() => {}} >
-                <Text>Cadastre-se aqui</Text>
+                <Text style={styles.cadastrar}>Cadastre-se aqui</Text>
             </TouchableOpacity>
         </View>
     )
@@ -65,6 +74,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         padding: 10,
+        marginBottom: 10,
 
     },
 
@@ -85,6 +95,12 @@ const styles = StyleSheet.create({
 
     },
 
+    cadastrar: {
+        textAlign: 'center',
+        margin: 5,
+
+    },
+
     linkNovoUsuario: {
         fontSize: 24,
         padding: 16,
@@ -96,14 +112,22 @@ const styles = StyleSheet.create({
         fontSize: 24, 
         fontWeight: 'bold',
         color: '#e20875',
-        backgroundColor: '#ad6ea4',
+        backgroundColor: '#cc95c4',
         borderRadius: 8,
+        marginBottom: 10,
+        padding: 10,
 
     },
 
     erro: {
-        fontSize: 24,
-            }
+        fontSize: 24, 
+        fontWeight: 'bold',
+        color: '#e20875',
+        backgroundColor: '#cc95c4',
+        borderRadius: 8,
+        marginBottom: 10,
+        padding: 10,
+    }
 
 })
 
